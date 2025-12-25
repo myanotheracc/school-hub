@@ -40,7 +40,7 @@ const students = [
 
 const RecentStudents = () => {
   return (
-    <div className="bg-card rounded-2xl p-5 lg:p-6 shadow-card animate-slide-up">
+    <div className="bg-card rounded-2xl p-5 lg:p-6 shadow-card animate-slide-up w-full max-w-full overflow-hidden">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-xl bg-primary/10">
