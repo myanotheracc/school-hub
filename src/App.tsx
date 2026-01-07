@@ -12,6 +12,7 @@ import Announcements from "./pages/Announcements";
 import Requests from "./pages/Requests";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import ExamResults from "./pages/ExamResults"; // Added Import
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/announcements" element={<Announcements />} />
             <Route path="/requests" element={<Requests />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/results" element={<ExamResults />} /> {/* Added Route */}
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

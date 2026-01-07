@@ -11,6 +11,7 @@ import {
   ChevronLeft,
   ChevronRight,
   School,
+  ClipboardCheck, // Added Import
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +19,7 @@ const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/" },
   { icon: Users, label: "Students", path: "/students" },
   { icon: GraduationCap, label: "Teachers", path: "/teachers" },
+  { icon: ClipboardCheck, label: "Exam Results", path: "/results" }, // Added Item
   { icon: DollarSign, label: "Fees", path: "/fees" },
   { icon: Megaphone, label: "Announcements", path: "/announcements" },
   { icon: FileText, label: "Requests", path: "/requests" },

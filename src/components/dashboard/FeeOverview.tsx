@@ -32,8 +32,8 @@ const FeeOverview = () => {
           <Progress value={collectionRate} className="h-3" />
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 gap-4">
+        {/* Stats - Updated grid columns */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="p-4 rounded-xl bg-success/10">
             <div className="flex items-center gap-2 mb-2">
               <CheckCircle className="w-4 h-4 text-success" />
