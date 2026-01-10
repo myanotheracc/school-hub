@@ -6,13 +6,14 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DashboardLayout from "./components/layout/DashboardLayout";
 import Dashboard from "./pages/Dashboard";
 import Students from "./pages/Students";
+import StudentDetails from "./pages/StudentDetails"; // IMPORT THIS
 import Teachers from "./pages/Teachers";
 import Fees from "./pages/Fees";
 import Announcements from "./pages/Announcements";
 import Requests from "./pages/Requests";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
-import ExamResults from "./pages/ExamResults"; // Added Import
+import ExamResults from "./pages/ExamResults";
 
 const queryClient = new QueryClient();
 
@@ -26,12 +27,13 @@ const App = () => (
           <Route element={<DashboardLayout />}>
             <Route path="/" element={<Dashboard />} />
             <Route path="/students" element={<Students />} />
+            <Route path="/students/:id" element={<StudentDetails />} /> {/* NEW ROUTE */}
             <Route path="/teachers" element={<Teachers />} />
             <Route path="/fees" element={<Fees />} />
             <Route path="/announcements" element={<Announcements />} />
             <Route path="/requests" element={<Requests />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/results" element={<ExamResults />} /> {/* Added Route */}
+            <Route path="/results" element={<ExamResults />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
