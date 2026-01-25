@@ -25,7 +25,9 @@ const DashboardLayout = () => {
   }, [navigate, location.pathname]);
 
   const mainContent = (
-    <div className="p-4 lg:p-6">
+    // Added 'pb-24' here to ensure content clears the bottom nav when scrolling,
+    // but doesn't force a gap when content is short.
+    <div className="p-4 lg:p-6 pb-24 lg:pb-6">
       <PageTransition>
         <Outlet />
       </PageTransition>
@@ -52,7 +54,8 @@ const DashboardLayout = () => {
       {/* Main Content */}
       <main
         className={cn(
-          "pt-16 pb-20 lg:pb-6 transition-all duration-300 h-[calc(100vh-4rem)]",
+          // REMOVED 'pb-20' from here to fix the large blank space
+          "pt-16 transition-all duration-300 h-[calc(100vh-4rem)]",
           sidebarCollapsed ? "lg:pl-20" : "lg:pl-64"
         )}
       >
