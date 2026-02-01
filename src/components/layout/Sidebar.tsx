@@ -1,109 +1,105 @@
-import { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
-import {
-  LayoutDashboard,
-  Users,
-  GraduationCap,
-  DollarSign,
-  Megaphone,
-  FileText,
-  Settings,
-  ChevronLeft,
-  ChevronRight,
-  School,
-  ClipboardCheck, // Added Import
+import { Link, useLocation, useNavigate } from "react-router-dom"; // 1. Added useNavigate
+import { 
+  LayoutDashboard, 
+  Users, 
+  GraduationCap, 
+  CreditCard, 
+  Bell, 
+  FileText, 
+  Settings, 
+  LogOut, 
+  ClipboardList, 
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import {
+  Sidebar as SidebarComponent,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@/components/ui/sidebar";
+import { toast } from "sonner"; // 2. Added toast for notifications
 
+// Menu items configuration
 const menuItems = [
-  { icon: LayoutDashboard, label: "Dashboard", path: "/" },
-  { icon: Users, label: "Students", path: "/students" },
-  { icon: GraduationCap, label: "Teachers", path: "/teachers" },
-  { icon: ClipboardCheck, label: "Exam Results", path: "/results" }, // Added Item
-  { icon: DollarSign, label: "Fees", path: "/fees" },
-  { icon: Megaphone, label: "Announcements", path: "/announcements" },
-  { icon: FileText, label: "Requests", path: "/requests" },
-  { icon: Settings, label: "Settings", path: "/settings" },
+  { title: "Dashboard", url: "/", icon: LayoutDashboard },
+  { title: "Students", url: "/students", icon: Users },
+  { title: "Teachers", url: "/teachers", icon: GraduationCap },
+  { title: "Exam Results", url: "/results", icon: ClipboardList },
+  { title: "Fees", url: "/fees", icon: CreditCard },
+  { title: "Announcements", url: "/announcements", icon: Bell },
+  { title: "Requests", url: "/requests", icon: FileText },
+  { title: "Settings", url: "/settings", icon: Settings },
 ];
 
-interface SidebarProps {
-  collapsed: boolean;
-  onToggle: () => void;
-}
-
-const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
+export default function Sidebar() {
   const location = useLocation();
+  const navigate = useNavigate(); // 3. Initialize navigation hook
+  const { setOpenMobile } = useSidebar();
+
+  // 4. Create the Logout Function
+  const handleLogout = () => {
+    // Clear the "logged in" flag from storage
+    localStorage.removeItem("isAuthenticated");
+    
+    // Show a success message
+    toast.success("Logged out successfully");
+    
+    // Redirect the user to the Login page
+    navigate("/login");
+  };
 
   return (
-    <aside
-      className={cn(
-        "fixed left-0 top-0 z-40 h-screen bg-sidebar transition-all duration-300 hidden lg:flex flex-col",
-        collapsed ? "w-20" : "w-64"
-      )}
-    >
-      {/* Logo */}
-      <div className="flex items-center justify-between h-16 px-4 border-b border-sidebar-border">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center shadow-md">
-            <School className="w-5 h-5 text-primary-foreground" />
-          </div>
-          {!collapsed && (
-            <span className="text-lg font-display font-bold text-sidebar-foreground">
-              EduAdmin
-            </span>
-          )}
+    <SidebarComponent>
+      <SidebarHeader className="border-b border-border p-4">
+        <div className="flex items-center gap-2 font-bold text-xl text-primary">
+          <GraduationCap className="h-6 w-6" />
+          <span>SchoolHub</span>
         </div>
-        <button
-          onClick={onToggle}
-          className="p-2 rounded-lg hover:bg-sidebar-accent transition-colors text-sidebar-foreground"
-        >
-          {collapsed ? (
-            <ChevronRight className="w-5 h-5" />
-          ) : (
-            <ChevronLeft className="w-5 h-5" />
-          )}
-        </button>
-      </div>
+      </SidebarHeader>
+      
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {menuItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={location.pathname === item.url}
+                    tooltip={item.title}
+                    onClick={() => setOpenMobile(false)}
+                  >
+                    <Link to={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
 
-      {/* Navigation */}
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {menuItems.map((item) => {
-          const isActive = location.pathname === item.path;
-          return (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={cn(
-                "flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200",
-                isActive
-                  ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-md"
-                  : "text-sidebar-foreground hover:bg-sidebar-accent"
-              )}
+      <SidebarFooter className="border-t border-border p-4">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            {/* 5. Attach the handleLogout function to onClick */}
+            <SidebarMenuButton 
+              onClick={handleLogout} 
+              className="text-red-500 hover:text-red-600 hover:bg-red-50"
             >
-              <item.icon className="w-5 h-5 flex-shrink-0" />
-              {!collapsed && (
-                <span className="font-medium truncate">{item.label}</span>
-              )}
-            </NavLink>
-          );
-        })}
-      </nav>
-
-      {/* Bottom section */}
-      {!collapsed && (
-        <div className="p-4 border-t border-sidebar-border">
-          <div className="p-4 rounded-xl bg-sidebar-accent">
-            <p className="text-sm font-medium text-sidebar-foreground">
-              Need Help?
-            </p>
-            <p className="text-xs text-sidebar-foreground/70 mt-1">
-              Check our documentation
-            </p>
-          </div>
-        </div>
-      )}
-    </aside>
+              <LogOut />
+              <span>Log Out</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </SidebarComponent>
   );
-};
-
-export default Sidebar;
+}

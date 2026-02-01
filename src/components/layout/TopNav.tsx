@@ -10,18 +10,27 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom"; 
+import { toast } from "sonner"; 
+import { useSidebar } from "@/components/ui/sidebar"; // 1. Import useSidebar
 
-interface TopNavProps {
-  onMenuClick: () => void;
-  sidebarCollapsed: boolean;
-}
+const TopNav = () => {
+  const navigate = useNavigate();
+  // 2. Get the sidebar state and toggle function directly
+  const { toggleSidebar, open, isMobile } = useSidebar(); 
 
-const TopNav = ({ onMenuClick, sidebarCollapsed }: TopNavProps) => {
+  const handleLogout = () => {
+    localStorage.removeItem("isAuthenticated");
+    toast.success("Logged out successfully");
+    navigate("/login");
+  };
+
   return (
     <header
       className={cn(
         "fixed top-0 right-0 z-30 h-16 bg-card border-b border-border transition-all duration-300",
-        sidebarCollapsed ? "lg:left-20" : "lg:left-64",
+        // 3. Update width logic to use the real sidebar state
+        isMobile ? "left-0" : (open ? "lg:left-64" : "lg:left-20"),
         "left-0"
       )}
     >
@@ -31,7 +40,7 @@ const TopNav = ({ onMenuClick, sidebarCollapsed }: TopNavProps) => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={onMenuClick}
+            onClick={toggleSidebar} // 4. Connect this button to the new Sidebar
             className="lg:hidden"
           >
             <Menu className="w-5 h-5" />
@@ -49,7 +58,6 @@ const TopNav = ({ onMenuClick, sidebarCollapsed }: TopNavProps) => {
 
         {/* Right side */}
         <div className="flex items-center gap-2 lg:gap-4">
-          {/* Notifications */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="relative">
@@ -70,27 +78,10 @@ const TopNav = ({ onMenuClick, sidebarCollapsed }: TopNavProps) => {
                     </p>
                   </div>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="p-4 cursor-pointer">
-                  <div>
-                    <p className="text-sm font-medium">Leave request pending</p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Teacher Sarah requested 3 days leave
-                    </p>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="p-4 cursor-pointer">
-                  <div>
-                    <p className="text-sm font-medium">New student enrolled</p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Emma Wilson joined Class 10-A
-                    </p>
-                  </div>
-                </DropdownMenuItem>
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Profile */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="gap-2 px-2">
@@ -114,7 +105,10 @@ const TopNav = ({ onMenuClick, sidebarCollapsed }: TopNavProps) => {
                 Settings
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer text-destructive">
+              <DropdownMenuItem 
+                className="cursor-pointer text-destructive"
+                onClick={handleLogout}
+              >
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
               </DropdownMenuItem>
