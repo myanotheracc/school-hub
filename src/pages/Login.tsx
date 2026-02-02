@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner"; 
+import API_URL from "@/config"; // <--- Import the new config
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,7 +15,8 @@ const Login = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/api/login", {
+      // Use the dynamic API_URL here
+      const response = await fetch(`${API_URL}/api/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -24,13 +26,13 @@ const Login = () => {
 
       if (response.ok) {
         toast.success("Login successful!");
-        // Save the login state so App.tsx knows we are logged in
         localStorage.setItem("isAuthenticated", "true");
         navigate("/"); 
       } else {
         toast.error(data.message || "Login failed");
       }
     } catch (error) {
+      console.error(error);
       toast.error("Failed to connect to server");
     }
   };

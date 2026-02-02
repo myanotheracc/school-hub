@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
+import API_URL from "@/config"; // <--- Import the new config
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -15,7 +16,8 @@ const Signup = () => {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/api/signup", {
+      // Use the dynamic API_URL here
+      const response = await fetch(`${API_URL}/api/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
@@ -30,6 +32,7 @@ const Signup = () => {
         toast.error(data.message || "Signup failed");
       }
     } catch (error) {
+      console.error(error);
       toast.error("Failed to connect to server");
     }
   };
