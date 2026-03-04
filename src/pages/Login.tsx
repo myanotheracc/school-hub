@@ -5,35 +5,24 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner"; 
-import API_URL from "@/config"; // <--- Import the new config
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      // Use the dynamic API_URL here
-      const response = await fetch(`${API_URL}/api/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
 
-      const data = await response.json();
+    // Kisi bhi input pe login allow
+    if (email && password) {
+      toast.success("Login successful!");
 
-      if (response.ok) {
-        toast.success("Login successful!");
-        localStorage.setItem("isAuthenticated", "true");
-        navigate("/"); 
-      } else {
-        toast.error(data.message || "Login failed");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to connect to server");
+      localStorage.setItem("isAuthenticated", "true");
+
+      navigate("/");
+    } else {
+      toast.error("Please enter email and password");
     }
   };
 
@@ -44,40 +33,48 @@ const Login = () => {
           <CardTitle>Welcome Back</CardTitle>
           <CardDescription>Enter your credentials to access the dashboard.</CardDescription>
         </CardHeader>
+
         <form onSubmit={handleLogin}>
           <CardContent className="space-y-4">
+
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input 
                 id="email" 
                 type="email" 
-                placeholder="admin@school.com" 
+                placeholder="anything@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required 
+                required
               />
             </div>
+
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input 
                 id="password" 
-                type="password" 
+                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required 
+                required
               />
             </div>
+
           </CardContent>
+
           <CardFooter className="flex flex-col space-y-2">
             <Button type="submit" className="w-full">Sign In</Button>
+
             <p className="text-sm text-center text-muted-foreground">
               Don't have an account?{" "}
               <Link to="/signup" className="text-primary hover:underline">
                 Sign up
               </Link>
             </p>
+
           </CardFooter>
         </form>
+
       </Card>
     </div>
   );
